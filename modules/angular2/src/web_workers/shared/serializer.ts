@@ -211,15 +211,15 @@ var RENDER_TEMPLATE_CMD_DESERIALIZERS = [
       new WebWorkerTextCmd(data['isBound'], data['ngContentIndex'], data['value']),
   (data: {[key: string]: any}) => new WebWorkerNgContentCmd(data['index'], data['ngContentIndex']),
   (data: {[key: string]: any}) =>
-      new WebWorkerBeginElementCmd(data['isBound'], data['ngContentIndex'], data['name'],
+      new WebWorkerBeginElementCmd(data['isBound'], data['ngContentIndex'], data['name'], data['namespaceURI'],
                                    data['attrNameAndValues'], data['eventTargetAndNames']),
   (data: {[key: string]: any}) => new WebWorkerEndElementCmd(),
   (data: {[key: string]: any}) => new WebWorkerBeginComponentCmd(
-      data['isBound'], data['ngContentIndex'], data['name'], data['attrNameAndValues'],
+      data['isBound'], data['ngContentIndex'], data['name'], data['namespaceURI'], data['attrNameAndValues'],
       data['eventTargetAndNames'], data['nativeShadow'], data['templateId']),
   (data: {[key: string]: any}) => new WebWorkerEndComponentCmd(),
   (data: {[key: string]: any}) => new WebWorkerEmbeddedTemplateCmd(
-      data['isBound'], data['ngContentIndex'], data['name'], data['attrNameAndValues'],
+      data['isBound'], data['ngContentIndex'], data['name'], data['namespaceURI'], data['attrNameAndValues'],
       data['eventTargetAndNames'], data['isMerged'],
       (<any[]>data['children']).map(childData => deserializeTemplateCmd(childData))),
 ];

@@ -43,6 +43,7 @@ export abstract class DomAdapter {
   abstract getInnerHTML(el): string;
   abstract getOuterHTML(el): string;
   abstract nodeName(node): string;
+  abstract nodeNamespace(node): string;
   abstract nodeValue(node): string;
   abstract type(node): string;
   abstract content(node): any;
@@ -69,6 +70,7 @@ export abstract class DomAdapter {
   abstract createComment(text: string): any;
   abstract createTemplate(html): HTMLElement;
   abstract createElement(tagName, doc?): HTMLElement;
+  abstract createElementNS(tagName, ns?, doc?): Element;
   abstract createTextNode(text: string, doc?): Text;
   abstract createScriptTag(attrName: string, attrValue: string, doc?): HTMLElement;
   abstract createStyleElement(css: string, doc?): HTMLStyleElement;

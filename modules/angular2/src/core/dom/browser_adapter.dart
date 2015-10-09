@@ -214,6 +214,7 @@ class BrowserDomAdapter extends GenericBrowserDomAdapter {
   }
 
   String nodeName(Node el) => el.nodeName;
+  String nodeNamespace(Node el) => el.namespaceURI;
   String nodeValue(Node el) => el.nodeValue;
   String type(InputElement el) => el.type;
   Node content(TemplateElement el) => _supportsTemplateElement ? el.content : el;

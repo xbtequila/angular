@@ -90,7 +90,7 @@ export interface IBeginElementCmd extends TemplateCmd, RenderBeginElementCmd {
 }
 
 export class BeginElementCmd implements TemplateCmd, IBeginElementCmd, RenderBeginElementCmd {
-  constructor(public name: string, public attrNameAndValues: string[],
+  constructor(public name: string, public namespaceURI: string, public attrNameAndValues: string[],
               public eventTargetAndNames: string[],
               public variableNameAndValues: Array<string | number>, public directives: Type[],
               public isBound: boolean, public ngContentIndex: number) {}
@@ -99,11 +99,11 @@ export class BeginElementCmd implements TemplateCmd, IBeginElementCmd, RenderBeg
   }
 }
 
-export function beginElement(name: string, attrNameAndValues: string[],
+export function beginElement(name: string, namespaceURI: string, attrNameAndValues: string[],
                              eventTargetAndNames: string[],
                              variableNameAndValues: Array<string | number>, directives: Type[],
                              isBound: boolean, ngContentIndex: number): BeginElementCmd {
-  return new BeginElementCmd(name, attrNameAndValues, eventTargetAndNames, variableNameAndValues,
+  return new BeginElementCmd(name, namespaceURI, attrNameAndValues, eventTargetAndNames, variableNameAndValues,
                              directives, isBound, ngContentIndex);
 }
 
@@ -120,7 +120,7 @@ export function endElement(): TemplateCmd {
 export class BeginComponentCmd implements TemplateCmd, IBeginElementCmd, RenderBeginComponentCmd {
   isBound: boolean = true;
   templateId: number;
-  constructor(public name: string, public attrNameAndValues: string[],
+  constructor(public name: string, public namespaceURI: string, public attrNameAndValues: string[],
               public eventTargetAndNames: string[],
               public variableNameAndValues: Array<string | number>, public directives: Type[],
               public nativeShadow: boolean, public ngContentIndex: number,
@@ -133,10 +133,10 @@ export class BeginComponentCmd implements TemplateCmd, IBeginElementCmd, RenderB
 }
 
 export function beginComponent(
-    name: string, attrNameAnsValues: string[], eventTargetAndNames: string[],
+    name: string, namespaceURI: string, attrNameAnsValues: string[], eventTargetAndNames: string[],
     variableNameAndValues: Array<string | number>, directives: Type[], nativeShadow: boolean,
     ngContentIndex: number, template: CompiledTemplate): BeginComponentCmd {
-  return new BeginComponentCmd(name, attrNameAnsValues, eventTargetAndNames, variableNameAndValues,
+  return new BeginComponentCmd(name, namespaceURI, attrNameAnsValues, eventTargetAndNames, variableNameAndValues,
                                directives, nativeShadow, ngContentIndex, template);
 }
 
@@ -154,6 +154,7 @@ export class EmbeddedTemplateCmd implements TemplateCmd, IBeginElementCmd,
     RenderEmbeddedTemplateCmd {
   isBound: boolean = true;
   name: string = null;
+  namespaceURI: string = null;
   eventTargetAndNames: string[] = EMPTY_ARR;
   constructor(public attrNameAndValues: string[], public variableNameAndValues: string[],
               public directives: Type[], public isMerged: boolean, public ngContentIndex: number,

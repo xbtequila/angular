@@ -106,6 +106,7 @@ export abstract class DomRenderer extends Renderer implements NodeFactory<Node> 
     return this.createElement('script', attrNameAndValues);
   }
   abstract createElement(name: string, attrNameAndValues: string[]): Node;
+  abstract createElementNS(name: string, namespaceURI: string, attrNameAndValues: string[]): Node;
   abstract mergeElement(existing: Node, attrNameAndValues: string[]);
   abstract createShadowRoot(host: Node, templateId: number): Node;
   createText(value: string): Node { return DOM.createTextNode(isPresent(value) ? value : ''); }
@@ -267,6 +268,11 @@ export class DomRenderer_ extends DomRenderer {
   }
   createElement(name: string, attrNameAndValues: string[]): Node {
     var el = DOM.createElement(name);
+    this._setAttributes(el, attrNameAndValues);
+    return el;
+  }
+  createElementNS(name: string, namespace: string, attrNameAndValues: string[]): Node {
+    var el = DOM.createElementNS(name, namespace);
     this._setAttributes(el, attrNameAndValues);
     return el;
   }

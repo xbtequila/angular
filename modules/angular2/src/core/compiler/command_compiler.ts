@@ -75,11 +75,11 @@ export class CommandCompiler {
 interface CommandFactory<R> {
   createText(value: string, isBound: boolean, ngContentIndex: number): R;
   createNgContent(index: number, ngContentIndex: number): R;
-  createBeginElement(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginElement(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                      variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                      isBound: boolean, ngContentIndex: number): R;
   createEndElement(): R;
-  createBeginComponent(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginComponent(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                        variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                        nativeShadow: boolean, ngContentIndex: number): R;
   createEndComponent(): R;
@@ -117,20 +117,20 @@ class RuntimeCommandFactory implements CommandFactory<TemplateCmd> {
   createNgContent(index: number, ngContentIndex: number): TemplateCmd {
     return ngContent(index, ngContentIndex);
   }
-  createBeginElement(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginElement(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                      variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                      isBound: boolean, ngContentIndex: number): TemplateCmd {
-    return beginElement(name, this._addStyleShimAttributes(attrNameAndValues, null, null),
+    return beginElement(name, namespaceURI, this._addStyleShimAttributes(attrNameAndValues, null, null),
                         eventTargetAndNames, variableNameAndValues, this._mapDirectives(directives),
                         isBound, ngContentIndex);
   }
   createEndElement(): TemplateCmd { return endElement(); }
-  createBeginComponent(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginComponent(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                        variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                        nativeShadow: boolean, ngContentIndex: number): TemplateCmd {
     var nestedTemplate = this.componentTemplateFactory(directives[0]);
     return beginComponent(
-        name, this._addStyleShimAttributes(attrNameAndValues, directives[0], nestedTemplate.id),
+        name, namespaceURI, this._addStyleShimAttributes(attrNameAndValues, directives[0], nestedTemplate.id),
         eventTargetAndNames, variableNameAndValues, this._mapDirectives(directives), nativeShadow,
         ngContentIndex, nestedTemplate);
   }
@@ -174,14 +174,14 @@ class CodegenCommandFactory implements CommandFactory<string> {
   createNgContent(index: number, ngContentIndex: number): string {
     return `${TEMPLATE_COMMANDS_MODULE_REF}ngContent(${index}, ${ngContentIndex})`;
   }
-  createBeginElement(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginElement(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                      variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                      isBound: boolean, ngContentIndex: number): string {
     var attrsExpression = codeGenArray(this._addStyleShimAttributes(attrNameAndValues, null, null));
     return `${TEMPLATE_COMMANDS_MODULE_REF}beginElement(${escapeSingleQuoteString(name)}, ${attrsExpression}, ${codeGenArray(eventTargetAndNames)}, ${codeGenArray(variableNameAndValues)}, ${codeGenDirectivesArray(directives)}, ${isBound}, ${ngContentIndex})`;
   }
   createEndElement(): string { return `${TEMPLATE_COMMANDS_MODULE_REF}endElement()`; }
-  createBeginComponent(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
+  createBeginComponent(name: string, namespaceURI: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                        variableNameAndValues: string[], directives: CompileDirectiveMetadata[],
                        nativeShadow: boolean, ngContentIndex: number): string {
     var nestedCompExpr = this.componentTemplateFactory(directives[0]);
@@ -267,13 +267,13 @@ class CommandBuilderVisitor<R> implements TemplateAstVisitor {
     var attrNameAndValues = this._readAttrNameAndValues(directives, ast.attrs);
     if (isPresent(component)) {
       this.result.push(this.commandFactory.createBeginComponent(
-          ast.name, attrNameAndValues, eventTargetAndNames, variableNameAndValues, directives,
+          ast.name, ast.namespace, attrNameAndValues, eventTargetAndNames, variableNameAndValues, directives,
           component.template.encapsulation === ViewEncapsulation.Native, ast.ngContentIndex));
       templateVisitAll(this, ast.children);
       this.result.push(this.commandFactory.createEndComponent());
     } else {
       this.result.push(this.commandFactory.createBeginElement(
-          ast.name, attrNameAndValues, eventTargetAndNames, variableNameAndValues, directives,
+          ast.name, ast.namespace, attrNameAndValues, eventTargetAndNames, variableNameAndValues, directives,
           ast.isBound(), ast.ngContentIndex));
       templateVisitAll(this, ast.children);
       this.result.push(this.commandFactory.createEndElement());

@@ -21,7 +21,7 @@ import {DOM} from 'angular2/src/core/dom/dom_adapter';
 
 function beginElement(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                       isBound: boolean, ngContentIndex: number): RenderBeginElementCmd {
-  return appCmds.beginElement(name, attrNameAndValues, eventTargetAndNames, [], [], isBound,
+  return appCmds.beginElement(name, 'http://www.w3.org/1999/xhtml', attrNameAndValues, eventTargetAndNames, [], [], isBound,
                               ngContentIndex)
 }
 
@@ -41,7 +41,7 @@ function embeddedTemplate(attrNameAndValues: string[], isMerged: boolean, ngCont
 
 function beginComponent(name: string, attrNameAndValues: string[], eventTargetAndNames: string[],
                         nativeShadow: boolean, ngContentIndex: number, templateId: number) {
-  return appCmds.beginComponent(name, attrNameAndValues, eventTargetAndNames, [], [], nativeShadow,
+  return appCmds.beginComponent(name, 'http://www.w3.org/1999/xhtml', attrNameAndValues, eventTargetAndNames, [], [], nativeShadow,
                                 ngContentIndex, new appCmds.CompiledTemplate(templateId, null));
 }
 
@@ -553,6 +553,11 @@ class DomNodeFactory implements NodeFactory<Node> {
   }
   createElement(name: string, attrNameAndValues: string[]): Node {
     var el = DOM.createElement(name);
+    this._setAttributes(el, attrNameAndValues);
+    return el;
+  }
+  createElementNS(name: string, namespaceURI: string, attrNameAndValues: string[]): Node {
+    var el = DOM.createElementNS(name, namespaceURI);
     this._setAttributes(el, attrNameAndValues);
     return el;
   }

@@ -18,6 +18,8 @@ var _attrToPropMap = {
 
 const DOM_KEY_LOCATION_NUMPAD = 3;
 
+const HTML_NAMESPACE_URI = 'http://www.w3.org/1999/xhtml';
+
 // Map to convert some key or keyIdentifier values to what will be returned by getEventKey
 var _keyMap = {
   // The following values are here for cross-browser compatibility and to match the W3C standard
@@ -129,6 +131,7 @@ export class BrowserDomAdapter extends GenericBrowserDomAdapter {
   getInnerHTML(el): string { return el.innerHTML; }
   getOuterHTML(el): string { return el.outerHTML; }
   nodeName(node: Node): string { return node.nodeName; }
+  nodeNamespace(node: Node): string { return node.namespaceURI; }
   nodeValue(node: Node): string { return node.nodeValue; }
   type(node: HTMLInputElement): string { return node.type; }
   content(node: Node): Node {
@@ -182,6 +185,7 @@ export class BrowserDomAdapter extends GenericBrowserDomAdapter {
     return t;
   }
   createElement(tagName, doc = document): HTMLElement { return doc.createElement(tagName); }
+  createElementNS(tagName, ns = HTML_NAMESPACE_URI, doc = document) { return doc.createElementNS(ns, tagName) }
   createTextNode(text: string, doc = document): Text { return doc.createTextNode(text); }
   createScriptTag(attrName: string, attrValue: string, doc = document): HTMLScriptElement {
     var el = <HTMLScriptElement>doc.createElement('SCRIPT');

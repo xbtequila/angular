@@ -163,6 +163,7 @@ class TemplateParseVisitor implements HtmlAstVisitor {
 
   visitElement(element: HtmlElementAst, component: Component): any {
     var nodeName = element.name;
+    var nodeNamespace = element.namespace;
     var preparsedElement = preparseElement(element);
     if (preparsedElement.type === PreparsedElementType.SCRIPT ||
         preparsedElement.type === PreparsedElementType.STYLE ||
@@ -220,7 +221,7 @@ class TemplateParseVisitor implements HtmlAstVisitor {
       this._assertOnlyOneComponent(directives, element.sourceInfo);
       var elementExportAsVars = ListWrapper.filter(vars, varAst => varAst.value.length === 0);
       parsedElement =
-          new ElementAst(nodeName, attrs, elementProps, events, elementExportAsVars, directives,
+          new ElementAst(nodeName, nodeNamespace, attrs, elementProps, events, elementExportAsVars, directives,
                          children, elementNgContentIndex, element.sourceInfo);
     }
     if (hasInlineTemplates) {
@@ -592,7 +593,7 @@ class NonBindableVisitor implements HtmlAstVisitor {
     var selector = createElementCssSelector(ast.name, attrNameAndValues);
     var ngContentIndex = component.findNgContentIndex(selector);
     var children = htmlVisitAll(this, ast.children, EMPTY_COMPONENT);
-    return new ElementAst(ast.name, htmlVisitAll(this, ast.attrs), [], [], [], [], children,
+    return new ElementAst(ast.name, ast.namespace, htmlVisitAll(this, ast.attrs), [], [], [], [], children,
                           ngContentIndex, ast.sourceInfo);
   }
   visitAttr(ast: HtmlAttrAst, context: any): AttrAst {

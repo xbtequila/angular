@@ -53,12 +53,13 @@ function parseElement(element: Element, indexInParent: number, parentSourceInfo:
   // normalize nodename always as lower case so that following build steps
   // can rely on this
   var nodeName = DOM.nodeName(element).toLowerCase();
+  var nodeNamepsace = DOM.nodeNamespace(element);
   // TODO(tbosch): add source row/column source info from parse5 / package:html
   var sourceInfo = `${parentSourceInfo} > ${nodeName}:nth-child(${indexInParent})`;
   var attrs = parseAttrs(element, sourceInfo);
 
   var childNodes = parseChildNodes(element, sourceInfo);
-  return new HtmlElementAst(nodeName, attrs, childNodes, sourceInfo);
+  return new HtmlElementAst(nodeName, nodeNamepsace, attrs, childNodes, sourceInfo);
 }
 
 function parseAttrs(element: Element, elementSourceInfo: string): HtmlAttrAst[] {

@@ -170,6 +170,7 @@ export class Parse5DomAdapter extends DomAdapter {
     return serializer.html;
   }
   nodeName(node): string { return node.tagName; }
+  nodeNamespace(node): string { return node.namespaceURI; }
   nodeValue(node): string { return node.nodeValue; }
   type(node: any): string { throw _notImplemented('type'); }
   content(node): string { return node.childNodes[0]; }
@@ -271,6 +272,9 @@ export class Parse5DomAdapter extends DomAdapter {
   }
   createElement(tagName): HTMLElement {
     return treeAdapter.createElement(tagName, 'http://www.w3.org/1999/xhtml', []);
+  }
+  createElementNS(tagName, ns): HTMLElement {
+    return treeAdapter.createElement(tagName, ns, []);
   }
   createTextNode(text: string): Text {
     var t = <any>this.createComment(text);

@@ -55,7 +55,7 @@ export class VariableAst implements TemplateAst {
 }
 
 export class ElementAst implements TemplateAst {
-  constructor(public name: string, public attrs: AttrAst[],
+  constructor(public name: string, public namespace: string, public attrs: AttrAst[],
               public inputs: BoundElementPropertyAst[], public outputs: BoundEventAst[],
               public exportAsVars: VariableAst[], public directives: DirectiveAst[],
               public children: TemplateAst[], public ngContentIndex: number,

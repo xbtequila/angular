@@ -37,7 +37,7 @@ export class WebWorkerNgContentCmd implements RenderNgContentCmd {
 }
 
 export class WebWorkerBeginElementCmd implements RenderBeginElementCmd {
-  constructor(public isBound: boolean, public ngContentIndex: number, public name: string,
+  constructor(public isBound: boolean, public ngContentIndex: number, public name: string, public namespaceURI: string,
               public attrNameAndValues: string[], public eventTargetAndNames: string[]) {}
   visit(visitor: RenderCommandVisitor, context: any): any {
     return visitor.visitBeginElement(this, context);
@@ -51,7 +51,7 @@ export class WebWorkerEndElementCmd implements RenderTemplateCmd {
 }
 
 export class WebWorkerBeginComponentCmd implements RenderBeginComponentCmd {
-  constructor(public isBound: boolean, public ngContentIndex: number, public name: string,
+  constructor(public isBound: boolean, public ngContentIndex: number, public name: string, public namespaceURI: string,
               public attrNameAndValues: string[], public eventTargetAndNames: string[],
               public nativeShadow: boolean, public templateId: number) {}
   visit(visitor: RenderCommandVisitor, context: any): any {
@@ -66,7 +66,7 @@ export class WebWorkerEndComponentCmd implements RenderTemplateCmd {
 }
 
 export class WebWorkerEmbeddedTemplateCmd implements RenderEmbeddedTemplateCmd {
-  constructor(public isBound: boolean, public ngContentIndex: number, public name: string,
+  constructor(public isBound: boolean, public ngContentIndex: number, public name: string, public namespaceURI: string,
               public attrNameAndValues: string[], public eventTargetAndNames: string[],
               public isMerged: boolean, public children: RenderTemplateCmd[]) {}
   visit(visitor: RenderCommandVisitor, context: any): any {

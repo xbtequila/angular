@@ -31,6 +31,7 @@ export interface NodeFactory<N> {
   resolveComponentTemplate(templateId: number): RenderTemplateCmd[];
   createTemplateAnchor(attrNameAndValues: string[]): N;
   createElement(name: string, attrNameAndValues: string[]): N;
+  createElementNS(name: string, namespaceURI: string, attrNameAndValues: string[]): N;
   mergeElement(existing: N, attrNameAndValues: string[]);
   createShadowRoot(host: N, templateId: number): N;
   createText(value: string): N;
@@ -179,13 +180,14 @@ class RenderViewBuilder<N> implements RenderCommandVisitor {
       context.factory.mergeElement(el, cmd.attrNameAndValues);
       this.fragmentRootNodes.push(el);
     } else {
-      el = context.factory.createElement(cmd.name, cmd.attrNameAndValues);
+      el = context.factory.createElementNS(cmd.name, cmd.namespaceURI, cmd.attrNameAndValues);
       this._addChild(el, cmd.ngContentIndex, context);
     }
     if (cmd.isBound) {
       var boundElementIndex = context.boundElements.length;
       context.boundElements.push(el);
       for (var i = 0; i < cmd.eventTargetAndNames.length; i += 2) {
+        var target = cmd.eventTargetAndNames[i];
         var target = cmd.eventTargetAndNames[i];
         var eventName = cmd.eventTargetAndNames[i + 1];
         context.addEventListener(boundElementIndex, target, eventName);

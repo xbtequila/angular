@@ -16,7 +16,7 @@ export class HtmlAttrAst implements HtmlAst {
 }
 
 export class HtmlElementAst implements HtmlAst {
-  constructor(public name: string, public attrs: HtmlAttrAst[], public children: HtmlAst[],
+  constructor(public name: string, public namespace: string, public attrs: HtmlAttrAst[], public children: HtmlAst[],
               public sourceInfo: string) {}
   visit(visitor: HtmlAstVisitor, context: any): any { return visitor.visitElement(this, context); }
 }

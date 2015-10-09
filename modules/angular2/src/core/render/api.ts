@@ -88,6 +88,7 @@ export interface RenderNgContentCmd {
 
 export interface RenderBeginElementCmd extends RenderBeginCmd {
   name: string;
+  namespaceURI: string;
   attrNameAndValues: string[];
   eventTargetAndNames: string[];
 }
