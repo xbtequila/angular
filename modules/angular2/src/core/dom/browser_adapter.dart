@@ -354,6 +354,10 @@ class BrowserDomAdapter extends GenericBrowserDomAdapter {
     element.setAttribute(name, value);
   }
 
+  void setAttributeNS(Element element, String name, String namespaceURI, String value) {
+    element.setAttributeNS(namespaceURI, name, value);
+  }
+
   void removeAttribute(Element element, String name) {
     //there is no removeAttribute method as of now in Dart:
     //https://code.google.com/p/dart/issues/detail?id=19934

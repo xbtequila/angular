@@ -98,15 +98,18 @@ class RuntimeCommandFactory implements CommandFactory<TemplateCmd> {
   private _addStyleShimAttributes(attrNameAndValues: string[],
                                   localComponent: CompileDirectiveMetadata,
                                   localTemplateId: number): string[] {
+
     var additionalStyles = [];
     if (isPresent(localComponent) &&
         localComponent.template.encapsulation === ViewEncapsulation.Emulated) {
       additionalStyles.push(shimHostAttribute(this.appId, localTemplateId));
       additionalStyles.push('');
+      additionalStyles.push(null);
     }
     if (this.component.template.encapsulation === ViewEncapsulation.Emulated) {
       additionalStyles.push(shimContentAttribute(this.appId, this.templateId));
       additionalStyles.push('');
+      additionalStyles.push(null);
     }
     return additionalStyles.concat(attrNameAndValues);
   }
@@ -159,11 +162,13 @@ class CodegenCommandFactory implements CommandFactory<string> {
       additionalStlyes.push(
           new Expression(shimHostAttributeExpr(this.appIdExpr, localTemplateIdExpr)));
       additionalStlyes.push('');
+      additionalStlyes.push(null);
     }
     if (this.component.template.encapsulation === ViewEncapsulation.Emulated) {
       additionalStlyes.push(
           new Expression(shimContentAttributeExpr(this.appIdExpr, this.templateIdExpr)));
       additionalStlyes.push('');
+      additionalStlyes.push(null);
     }
     return additionalStlyes.concat(attrNameAndValues);
   }
@@ -216,9 +221,10 @@ class CommandBuilderVisitor<R> implements TemplateAstVisitor {
       StringMapWrapper.forEach(directiveMeta.hostAttributes, (value, name) => {
         attrNameAndValues.push(name);
         attrNameAndValues.push(value);
+        attrNameAndValues.push(null);
       });
     });
-    return removeKeyValueArrayDuplicates(attrNameAndValues);
+    return removeKeyValueNamespaceArrayDuplicates(attrNameAndValues);
   }
 
   visitNgContent(ast: NgContentAst, context: any): any {
@@ -284,6 +290,7 @@ class CommandBuilderVisitor<R> implements TemplateAstVisitor {
   visitAttr(ast: AttrAst, attrNameAndValues: string[]): any {
     attrNameAndValues.push(ast.name);
     attrNameAndValues.push(ast.value);
+    attrNameAndValues.push(ast.namespaceURI);
     return null;
   }
   visitBoundText(ast: BoundTextAst, context: any): any {
@@ -322,6 +329,24 @@ function removeKeyValueArrayDuplicates(keyValueArray: string[]): string[] {
     if (!SetWrapper.has(knownPairs, pairId)) {
       resultKeyValueArray.push(key);
       resultKeyValueArray.push(value);
+      knownPairs.add(pairId);
+    }
+  }
+  return resultKeyValueArray;
+}
+
+function removeKeyValueNamespaceArrayDuplicates(keyValueArray: string[]): string[] {
+  var knownPairs = new Set();
+  var resultKeyValueArray = [];
+  for (var i = 0; i < keyValueArray.length; i += 3) {
+    var key = keyValueArray[i];
+    var value = keyValueArray[i + 1];
+    var ns = keyValueArray[i + 2];
+    var pairId = `${key}:${value}:${ns}`;
+    if (!SetWrapper.has(knownPairs, pairId)) {
+      resultKeyValueArray.push(key);
+      resultKeyValueArray.push(value);
+      resultKeyValueArray.push(ns);
       knownPairs.add(pairId);
     }
   }

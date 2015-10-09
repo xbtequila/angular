@@ -42,10 +42,10 @@ function parseText(text: Text, indexInParent: number, parentSourceInfo: string):
                          `${parentSourceInfo} > #text(${value}):nth-child(${indexInParent})`);
 }
 
-function parseAttr(element: Element, parentSourceInfo: string, attrName: string, attrValue: string):
+function parseAttr(element: Element, parentSourceInfo: string, attrName: string, attrValue: string, namespaceURI: string):
     HtmlAttrAst {
   // TODO(tbosch): add source row/column source info from parse5 / package:html
-  return new HtmlAttrAst(attrName, attrValue, `${parentSourceInfo}[${attrName}=${attrValue}]`);
+  return new HtmlAttrAst(attrName, attrValue, namespaceURI, `${parentSourceInfo}[${attrName}=${attrValue}]`);
 }
 
 function parseElement(element: Element, indexInParent: number, parentSourceInfo: string):
@@ -68,9 +68,9 @@ function parseAttrs(element: Element, elementSourceInfo: string): HtmlAttrAst[] 
   // in DOM parsers!
   var attrMap = DOM.attributeMap(element);
   var attrList: string[][] = [];
-  attrMap.forEach((value, name) => attrList.push([name, value]));
+  attrMap.forEach((value, name) => attrList.push([name, value[0], value[1]]));
   attrList.sort((entry1, entry2) => StringWrapper.compare(entry1[0], entry2[0]));
-  return attrList.map(entry => parseAttr(element, elementSourceInfo, entry[0], entry[1]));
+  return attrList.map(entry => parseAttr(element, elementSourceInfo, entry[0], entry[1], entry[2]));
 }
 
 function parseChildNodes(element: Element, parentSourceInfo: string): HtmlAst[] {

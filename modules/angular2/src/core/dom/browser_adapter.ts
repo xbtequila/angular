@@ -217,18 +217,19 @@ export class BrowserDomAdapter extends GenericBrowserDomAdapter {
   removeStyle(element, stylename: string) { element.style[stylename] = null; }
   getStyle(element, stylename: string): string { return element.style[stylename]; }
   tagName(element): string { return element.tagName; }
-  attributeMap(element): Map<string, string> {
-    var res = new Map<string, string>();
+  attributeMap(element): Map<string, string[]> {
+    var res = new Map<string, string[]>();
     var elAttrs = element.attributes;
     for (var i = 0; i < elAttrs.length; i++) {
       var attrib = elAttrs[i];
-      res.set(attrib.name, attrib.value);
+      res.set(attrib.name, [attrib.value, attrib.namespaceURI]);
     }
     return res;
   }
   hasAttribute(element, attribute: string): boolean { return element.hasAttribute(attribute); }
   getAttribute(element, attribute: string): string { return element.getAttribute(attribute); }
   setAttribute(element, name: string, value: string) { element.setAttribute(name, value); }
+  setAttributeNS(element, name: string, namespaceURI: string, value: string) { element.setAttributeNS(namespaceURI, name, value); }
   removeAttribute(element, attribute: string) { element.removeAttribute(attribute); }
   templateAwareRoot(el): any { return this.isTemplateElement(el) ? this.content(el) : el; }
   createHtmlDocument(): HTMLDocument {

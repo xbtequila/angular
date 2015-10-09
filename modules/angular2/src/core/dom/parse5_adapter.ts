@@ -408,12 +408,12 @@ export class Parse5DomAdapter extends DomAdapter {
     return styleMap.hasOwnProperty(stylename) ? styleMap[stylename] : "";
   }
   tagName(element): string { return element.tagName == "style" ? "STYLE" : element.tagName; }
-  attributeMap(element): Map<string, string> {
-    var res = new Map<string, string>();
+  attributeMap(element): Map<string, string[]> {
+    var res = new Map<string, string[]>();
     var elAttrs = treeAdapter.getAttrList(element);
     for (var i = 0; i < elAttrs.length; i++) {
       var attrib = elAttrs[i];
-      res.set(attrib.name, attrib.value);
+      res.set(attrib.name, [attrib.value, attrib.namespaceURI]);
     }
     return res;
   }
@@ -426,6 +426,14 @@ export class Parse5DomAdapter extends DomAdapter {
                null;
   }
   setAttribute(element, attribute: string, value: string) {
+    if (attribute) {
+      element.attribs[attribute] = value;
+      if (attribute === 'class') {
+        element.className = value;
+      }
+    }
+  }
+  setAttributeNS(element, attribute: string, value: string) {
     if (attribute) {
       element.attribs[attribute] = value;
       if (attribute === 'class') {

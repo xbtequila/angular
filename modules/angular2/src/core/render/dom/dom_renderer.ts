@@ -281,8 +281,12 @@ export class DomRenderer_ extends DomRenderer {
     this._setAttributes(existing, attrNameAndValues);
   }
   private _setAttributes(node: Node, attrNameAndValues: string[]) {
-    for (var attrIdx = 0; attrIdx < attrNameAndValues.length; attrIdx += 2) {
-      DOM.setAttribute(node, attrNameAndValues[attrIdx], attrNameAndValues[attrIdx + 1]);
+    for (var attrIdx = 0; attrIdx < attrNameAndValues.length; attrIdx += 3) {
+      if (attrNameAndValues[attrIdx + 2] !== null) {
+        DOM.setAttributeNS(node, attrNameAndValues[attrIdx], attrNameAndValues[attrIdx + 2], attrNameAndValues[attrIdx + 1]);
+      } else {
+        DOM.setAttribute(node, attrNameAndValues[attrIdx], attrNameAndValues[attrIdx + 1]);
+      }
     }
   }
   createShadowRoot(host: Node, templateId: number): Node {

@@ -20,7 +20,7 @@ export class BoundTextAst implements TemplateAst {
 }
 
 export class AttrAst implements TemplateAst {
-  constructor(public name: string, public value: string, public sourceInfo: string) {}
+  constructor(public name: string, public value: string, public namespaceURI: string, public sourceInfo: string) {}
   visit(visitor: TemplateAstVisitor, context: any): any { return visitor.visitAttr(this, context); }
 }
 

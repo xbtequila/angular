@@ -11,7 +11,7 @@ export class HtmlTextAst implements HtmlAst {
 }
 
 export class HtmlAttrAst implements HtmlAst {
-  constructor(public name: string, public value: string, public sourceInfo: string) {}
+  constructor(public name: string, public value: string, public namespaceURI: string, public sourceInfo: string) {}
   visit(visitor: HtmlAstVisitor, context: any): any { return visitor.visitAttr(this, context); }
 }
 

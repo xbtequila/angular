@@ -158,7 +158,7 @@ class TemplateParseVisitor implements HtmlAstVisitor {
   }
 
   visitAttr(ast: HtmlAttrAst, contex: any): any {
-    return new AttrAst(ast.name, ast.value, ast.sourceInfo);
+    return new AttrAst(ast.name, ast.value, ast.namespaceURI, ast.sourceInfo);
   }
 
   visitElement(element: HtmlElementAst, component: Component): any {
@@ -597,7 +597,7 @@ class NonBindableVisitor implements HtmlAstVisitor {
                           ngContentIndex, ast.sourceInfo);
   }
   visitAttr(ast: HtmlAttrAst, context: any): AttrAst {
-    return new AttrAst(ast.name, ast.value, ast.sourceInfo);
+    return new AttrAst(ast.name, ast.value, ast.namespaceURI, ast.sourceInfo);
   }
   visitText(ast: HtmlTextAst, component: Component): TextAst {
     var ngContentIndex = component.findNgContentIndex(TEXT_CSS_SELECTOR);
